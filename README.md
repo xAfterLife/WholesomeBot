@@ -1,2 +1,2 @@
 # WholesomeBot
-DiscordBot that potentially one day will ahve VRChat API Interaction
+DiscordBot that potentially one day will have VRChat API Interaction
