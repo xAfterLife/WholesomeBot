@@ -24,12 +24,12 @@ public class VRCModule : ModuleBase<SocketCommandContext>
             _ = ReplyAsync(embed: embed);
     }
 
-    [Command("friendvrid")]
-    public async Task FriendVrId([Remainder] string text)
+    [Command("friendvruser")]
+    public async Task FriendVrUser([Remainder] string text)
     {
         if ( !await VRChatApiService.SendFriendRequest(text) )
         {
-            _ = ReplyAsync("UserID not found or already befriended");
+            _ = ReplyAsync("User not found or already befriended");
             return;
         }
 

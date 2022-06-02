@@ -16,15 +16,17 @@ public class TestingModule : ModuleBase<SocketCommandContext>
     }
 
     [Command("joinvrinstance")]
-    public async Task JoinVrInstance([Remainder] string text)
+    public Task JoinVrInstance([Remainder] string text)
     {
-        await VRChatApiService.RequestInvite(text);
+        _ = VRChatApiService.RequestInvite(text);
+        return Task.CompletedTask;
     }
 
-    [Command("invitevruser")]
-    public Task InviteVrUser([Remainder] string text)
+    [Command("test")]
+    public Task test([Remainder] string text)
     {
-        _ = VRChatApiService.Invite(text);
+        var players = text.Split(";");
+        _ = VRChatApiService.GetInviteForPlayer(players[0], players[1]);
         return Task.CompletedTask;
     }
 }

@@ -43,6 +43,7 @@ internal class Program
                .AddSingleton<CommandHandlingService>()
                .AddSingleton<VRChatApiService>()
                .AddSingleton<LoggingService>()
+               .AddSingleton<UtilityService>()
                .AddSingleton<HttpClient>()
                .BuildServiceProvider();
     }
