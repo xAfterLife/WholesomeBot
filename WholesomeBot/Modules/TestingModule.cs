@@ -1,4 +1,5 @@
 ﻿using Discord.Commands;
+using Discord.WebSocket;
 using WholesomeBot.Services;
 
 namespace WholesomeBot.Modules;

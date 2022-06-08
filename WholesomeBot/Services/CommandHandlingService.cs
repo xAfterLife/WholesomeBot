@@ -55,7 +55,6 @@ public class CommandHandlingService
         if (result.IsSuccess)
             return;
 
-
         // the command failed, let's notify the user that something happened.
         await context.Channel.SendMessageAsync($"{result}");
     }

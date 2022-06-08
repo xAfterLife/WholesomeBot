@@ -1,8 +1,7 @@
-﻿namespace WholesomeBot.Models
+﻿namespace WholesomeBot.Models;
+
+public class NotificationInviteDetails
 {
-    public class NotificationInviteDetails
-    {
-        public string? worldId { get; set; }
-        public string? worldName { get; set; }
-    }
+    public string? worldId { get; set; }
+    public string? worldName { get; set; }
 }

@@ -1,14 +1,13 @@
-﻿namespace WholesomeBot.Models
-{
-    public class LinkedAccountDetails
-    {
-        public string VrcId{ get; set; }
-        public string DiscordId { get; set; }
+﻿namespace WholesomeBot.Models;
 
-        public LinkedAccountDetails(string vrcId, string discordId)
-        {
-            VrcId = vrcId;
-            DiscordId = discordId;
-        }
+public class LinkedAccountDetails
+{
+    public ulong DiscordId { get; set; }
+    public string VrcId { get; set; }
+
+    public LinkedAccountDetails(string vrcId, ulong discordId)
+    {
+        VrcId = vrcId;
+        DiscordId = discordId;
     }
 }

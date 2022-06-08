@@ -1,4 +1,5 @@
 ﻿using Discord.Commands;
+using VRChat.API.Model;
 using WholesomeBot.Services;
 
 namespace WholesomeBot.Modules;
@@ -19,6 +20,8 @@ public class VRCModule : ModuleBase<SocketCommandContext>
             _ = ReplyAsync("No Matches Found");
             return;
         }
+
+        
 
         foreach ( var embed in users )
             _ = ReplyAsync(embed: embed);
