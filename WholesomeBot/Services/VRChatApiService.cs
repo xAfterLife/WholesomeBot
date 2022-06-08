@@ -55,6 +55,12 @@ public class VRChatApiService
         _logger.LogAsync($"Connected as User: {currentUser.Username} ({currentUser.Id})");
     }
 
+    /// <summary>
+    /// Invites a Player to another Players Instance
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="sender"></param>
+    /// <returns></returns>
     public async Task GetInviteForPlayer(string target, string sender)
     {
         var targetUser = (await _userApi.SearchUsersAsync(target, null, 1)).FirstOrDefault(x => x.DisplayName == target);
@@ -90,6 +96,12 @@ public class VRChatApiService
         _ = Invite(senderUser.Id, notificationInviteDetails.worldId!);
     }
 
+    /// <summary>
+    /// Invites a userId to an Instance
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="instanceId"></param>
+    /// <returns></returns>
     public Task Invite(string userId, string instanceId)
     {
         var request = new InviteRequest(instanceId);
@@ -97,6 +109,11 @@ public class VRChatApiService
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Requests an Invite to a user and returns the awaited Notification
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async ValueTask<Notification> RequestInvite(string userId)
     {
         await _notificationsApi.ClearNotificationsAsync();
@@ -105,7 +122,12 @@ public class VRChatApiService
         return await GetInviteNotification(userId);
     }
 
-    public async Task<Notification> GetInviteNotification(string userId)
+    /// <summary>
+    /// Gets an Invite Notification matching to the UserID requested
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async ValueTask<Notification> GetInviteNotification(string userId)
     {
         Notification? notification = null;
 
@@ -117,6 +139,11 @@ public class VRChatApiService
         return notification;
     }
 
+    /// <summary>
+    /// Sends a Friend-Request to a user if it can be found and is not already befriended
+    /// </summary>
+    /// <param name="userName"></param>
+    /// <returns></returns>
     public async Task<bool> SendFriendRequest(string userName)
     {
         var user = (await _userApi.SearchUsersAsync(userName, null, 1)).FirstOrDefault(x => x.DisplayName == userName);
@@ -126,6 +153,11 @@ public class VRChatApiService
         return true;
     }
 
+    /// <summary>
+    /// Search Users and give them out as separate Embeds
+    /// </summary>
+    /// <param name="username"></param>
+    /// <returns></returns>
     public async Task<List<Embed>> SearchUsersEmbed(string username)
     {
         var embeds = new List<Embed>();
@@ -174,17 +206,32 @@ public class VRChatApiService
         }
     }
 
+    /// <summary>
+    /// Check if user is online by looking at the Location
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
     private bool IsOnline(LimitedUser user)
     {
         var realUser = _userApi.GetUserAsync(user.Id).Result;
         return !string.IsNullOrEmpty(realUser.Location);
     }
 
+    /// <summary>
+    /// Wrapper for the Online-Status function
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
     private string GetOnlineStatus(LimitedUser user)
     {
         return IsOnline(user) ? "online" : "offline";
     }
 
+    /// <summary>
+    /// Gets the Trust Rank of a User's Tags
+    /// </summary>
+    /// <param name="tags"></param>
+    /// <returns></returns>
     private static string GetTrustRank(ICollection<string> tags)
     {
         var trust = "Visitor";
@@ -201,6 +248,11 @@ public class VRChatApiService
         return trust;
     }
 
+    /// <summary>
+    /// Converts a User to it's Rank Color to be Displayed as a Background Color in Discord
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
     private static Color GetTrustColor(LimitedUser user)
     {
         return GetTrustRank(user.Tags) switch
