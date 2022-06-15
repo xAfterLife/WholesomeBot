@@ -9,6 +9,7 @@ public class TestingModule : ModuleBase<SocketCommandContext>
 {
     // Dependency Injection will fill this value 
     public VRChatApiService VRChatApiService { get; set; } = null!;
+    public VerificationService VerificationService { get; set; } = null!;
 
     [Command("debugerror")]
     public Task DebugError([Remainder] string text)
@@ -16,11 +17,12 @@ public class TestingModule : ModuleBase<SocketCommandContext>
         throw new Exception(text);
     }
 
-    [Command("joinvrinstance")]
-    public Task JoinVrInstance([Remainder] string text)
+    [Command("verify")]
+    public async Task Verify([Remainder] string text)
     {
-        _ = VRChatApiService.RequestInvite(text);
-        return Task.CompletedTask;
+        var user = await VRChatApiService.GetUserByDisplayname(text);
+        if (user == null) return;
+        VerificationService.AddVerifiedUser(user.Id, Context.User.Id);
     }
 
     [Command("test")]

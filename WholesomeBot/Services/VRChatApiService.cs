@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using System.Security.Cryptography.X509Certificates;
+using Discord;
 using Microsoft.Extensions.DependencyInjection;
 using VRChat.API.Api;
 using VRChat.API.Client;
@@ -137,6 +138,12 @@ public class VRChatApiService
         }
 
         return notification;
+    }
+
+    public async ValueTask<LimitedUser?> GetUserByDisplayname(string displayName)
+    {
+        var user = await _userApi.SearchUsersAsync(displayName, null, 1);
+        return user.FirstOrDefault(x => x.DisplayName == displayName);
     }
 
     /// <summary>
