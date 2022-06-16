@@ -23,6 +23,7 @@ internal class Program
         await _logger.LogAsync("Initializing Services");
         //Initialize
         await services.GetRequiredService<CommandHandlingService>().InitializeAsync();
+        await services.GetRequiredService<ComponentHandlingService>().InitializeAsync();
         await services.GetRequiredService<LoggingService>().InitializeAsync();
 
         await _logger.LogAsync("Logging into Discord");
@@ -38,12 +39,14 @@ internal class Program
     private static ServiceProvider ConfigureServices()
     {
         return new ServiceCollection()
+               .AddSingleton<LoggingService>()
+               .AddSingleton<UtilityService>()
                .AddSingleton<DiscordSocketClient>()
                .AddSingleton<CommandService>()
                .AddSingleton<CommandHandlingService>()
+               .AddSingleton<ComponentHandlingService>()
                .AddSingleton<VRChatApiService>()
-               .AddSingleton<LoggingService>()
-               .AddSingleton<UtilityService>()
+               .AddSingleton<VerificationService>()
                .AddSingleton<HttpClient>()
                .BuildServiceProvider();
     }

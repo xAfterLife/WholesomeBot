@@ -1,17 +1,14 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace WholesomeBot.Services;
 
 public class UtilityService
 {
-    private readonly IServiceProvider _services;
     private readonly LoggingService _logger;
+    private readonly IServiceProvider _services;
 
     public UtilityService(IServiceProvider services)
     {
@@ -25,7 +22,7 @@ public class UtilityService
         {
             return JsonSerializer.DeserializeAsync<T>(new MemoryStream(Encoding.UTF8.GetBytes(jsonString.ToArray())))!;
         }
-        catch (Exception e)
+        catch ( Exception e )
         {
             _ = _logger.LogAsync("", e);
             return default;

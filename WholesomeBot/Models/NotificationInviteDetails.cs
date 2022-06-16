@@ -1,7 +1,7 @@
 ﻿namespace WholesomeBot.Models;
 
 /// <summary>
-/// Used to parse the Instance JSON and Holder for Instance-Data
+///     Used to parse the Instance JSON and Holder for Instance-Data
 /// </summary>
 public class NotificationInviteDetails
 {

@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace WholesomeBot.Services;
 
-public partial class LoggingService
+public class LoggingService
 {
     private readonly IServiceProvider _services;
 

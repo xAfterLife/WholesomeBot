@@ -30,15 +30,15 @@ public class CommandHandlingService
     public async Task InitializeAsync()
     {
         // Register modules that are public and inherit ModuleBase<T>.
-        foreach (var module in await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services))
+        foreach ( var module in await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services) )
             _ = _logger.LogAsync(module.Name, caller: "Module Loaded");
     }
 
     public async Task MessageReceivedAsync(SocketMessage rawMessage)
     {
-        if (rawMessage is not SocketUserMessage { Source: MessageSource.User } message)
+        if ( rawMessage is not SocketUserMessage { Source: MessageSource.User } message )
             return;
-        if (!message.HasStringPrefix(PrefixStr, ref _argPos))
+        if ( !message.HasStringPrefix(PrefixStr, ref _argPos) )
             return;
 
         var context = new SocketCommandContext(_discord, message);
@@ -48,11 +48,11 @@ public class CommandHandlingService
     public async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
     {
         // command is unspecified when there was a search failure (command not found); we don't care about these errors
-        if (!command.IsSpecified)
+        if ( !command.IsSpecified )
             return;
 
         // the command was successful, we don't care about this result, unless we want to log that a command succeeded.
-        if (result.IsSuccess)
+        if ( result.IsSuccess )
             return;
 
         // the command failed, let's notify the user that something happened.

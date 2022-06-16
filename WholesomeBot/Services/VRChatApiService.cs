@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Discord;
+﻿using Discord;
 using Microsoft.Extensions.DependencyInjection;
 using VRChat.API.Api;
 using VRChat.API.Client;
@@ -18,15 +17,15 @@ public class VRChatApiService
     private readonly FriendsApi _friendsApi;
     private readonly InstancesApi _instanceApi;
     private readonly InviteApi _inviteApi;
+
+    private readonly LoggingService _logger;
     private readonly NotificationsApi _notificationsApi;
     private readonly PermissionsApi _permissionsApi;
     private readonly PlayermoderationApi _playermoderationApi;
     private readonly SystemApi _systemApi;
     private readonly UsersApi _userApi;
-    private readonly WorldsApi _worldApi;
-
-    private readonly LoggingService _logger;
     private readonly UtilityService _utility;
+    private readonly WorldsApi _worldApi;
 
     public VRChatApiService(IServiceProvider services)
     {
@@ -57,7 +56,7 @@ public class VRChatApiService
     }
 
     /// <summary>
-    /// Invites a Player to another Players Instance
+    ///     Invites a Player to another Players Instance
     /// </summary>
     /// <param name="target"></param>
     /// <param name="sender"></param>
@@ -67,25 +66,25 @@ public class VRChatApiService
         var targetUser = (await _userApi.SearchUsersAsync(target, null, 1)).FirstOrDefault(x => x.DisplayName == target);
         var senderUser = (await _userApi.SearchUsersAsync(sender, null, 1)).FirstOrDefault(x => x.DisplayName == sender);
 
-        if (targetUser == null)
+        if ( targetUser == null )
         {
             _ = _logger.LogAsync("Target not found");
             return;
         }
 
-        if (!targetUser.IsFriend)
+        if ( !targetUser.IsFriend )
         {
             _ = _logger.LogAsync("Target not befriended");
             return;
         }
 
-        if (senderUser == null)
+        if ( senderUser == null )
         {
             _ = _logger.LogAsync("Sender not found");
             return;
         }
 
-        if (!senderUser.IsFriend)
+        if ( !senderUser.IsFriend )
         {
             _ = _logger.LogAsync("Sender not befriended");
             return;
@@ -98,7 +97,7 @@ public class VRChatApiService
     }
 
     /// <summary>
-    /// Invites a userId to an Instance
+    ///     Invites a userId to an Instance
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="instanceId"></param>
@@ -111,7 +110,7 @@ public class VRChatApiService
     }
 
     /// <summary>
-    /// Requests an Invite to a user and returns the awaited Notification
+    ///     Requests an Invite to a user and returns the awaited Notification
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
@@ -124,7 +123,7 @@ public class VRChatApiService
     }
 
     /// <summary>
-    /// Gets an Invite Notification matching to the UserID requested
+    ///     Gets an Invite Notification matching to the UserID requested
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
@@ -132,10 +131,8 @@ public class VRChatApiService
     {
         Notification? notification = null;
 
-        while (notification == null)
-        {
+        while ( notification == null )
             notification = (await _notificationsApi.GetNotificationsAsync("invite")).FirstOrDefault(x => x.SenderUserId == userId)!;
-        }
 
         return notification;
     }
@@ -147,21 +144,21 @@ public class VRChatApiService
     }
 
     /// <summary>
-    /// Sends a Friend-Request to a user if it can be found and is not already befriended
+    ///     Sends a Friend-Request to a user if it can be found and is not already befriended
     /// </summary>
     /// <param name="userName"></param>
     /// <returns></returns>
     public async Task<bool> SendFriendRequest(string userName)
     {
         var user = (await _userApi.SearchUsersAsync(userName, null, 1)).FirstOrDefault(x => x.DisplayName == userName);
-        if (user == null || user.IsFriend)
+        if ( user == null || user.IsFriend )
             return false;
         _ = _friendsApi.FriendAsync(user.Id);
         return true;
     }
 
     /// <summary>
-    /// Search Users and give them out as separate Embeds
+    ///     Search Users and give them out as separate Embeds
     /// </summary>
     /// <param name="username"></param>
     /// <returns></returns>
@@ -173,7 +170,7 @@ public class VRChatApiService
         {
             var searchResult = await _userApi.SearchUsersAsync(username);
 
-            foreach (var user in searchResult)
+            foreach ( var user in searchResult )
             {
                 var embedBuilder = new EmbedBuilder();
 
@@ -206,7 +203,7 @@ public class VRChatApiService
 
             return embeds;
         }
-        catch (ApiException e)
+        catch ( ApiException e )
         {
             _ = _logger.LogAsync("Exception when calling API", e);
             return embeds;
@@ -214,7 +211,7 @@ public class VRChatApiService
     }
 
     /// <summary>
-    /// Check if user is online by looking at the Location
+    ///     Check if user is online by looking at the Location
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
@@ -225,7 +222,7 @@ public class VRChatApiService
     }
 
     /// <summary>
-    /// Wrapper for the Online-Status function
+    ///     Wrapper for the Online-Status function
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
@@ -235,28 +232,28 @@ public class VRChatApiService
     }
 
     /// <summary>
-    /// Gets the Trust Rank of a User's Tags
+    ///     Gets the Trust Rank of a User's Tags
     /// </summary>
     /// <param name="tags"></param>
     /// <returns></returns>
     private static string GetTrustRank(ICollection<string> tags)
     {
         var trust = "Visitor";
-        if (tags.Contains("system_trust_basic"))
+        if ( tags.Contains("system_trust_basic") )
             trust = "New User";
-        if (tags.Contains("system_trust_known"))
+        if ( tags.Contains("system_trust_known") )
             trust = "User";
-        if (tags.Contains("system_trust_trusted"))
+        if ( tags.Contains("system_trust_trusted") )
             trust = "Known User";
-        if (tags.Contains("system_trust_veteran"))
+        if ( tags.Contains("system_trust_veteran") )
             trust = "Trusted User";
-        if (tags.Contains("system_trust_legend"))
+        if ( tags.Contains("system_trust_legend") )
             trust = "Veteran User";
         return trust;
     }
 
     /// <summary>
-    /// Converts a User to it's Rank Color to be Displayed as a Background Color in Discord
+    ///     Converts a User to it's Rank Color to be Displayed as a Background Color in Discord
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
@@ -264,12 +261,12 @@ public class VRChatApiService
     {
         return GetTrustRank(user.Tags) switch
         {
-            "New User" => Color.Blue,
-            "User" => Color.Green,
-            "Known User" => Color.Orange,
+            "New User"     => Color.Blue,
+            "User"         => Color.Green,
+            "Known User"   => Color.Orange,
             "Trusted User" => Color.Purple,
             "Veteran User" => Color.Gold,
-            _ => Color.LightGrey
+            _              => Color.LightGrey
         };
     }
 }
