@@ -22,7 +22,7 @@ public class UtilityService
         {
             return JsonSerializer.DeserializeAsync<T>(new MemoryStream(Encoding.UTF8.GetBytes(jsonString.ToArray())))!;
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
             _ = _logger.LogAsync("", e);
             return default;

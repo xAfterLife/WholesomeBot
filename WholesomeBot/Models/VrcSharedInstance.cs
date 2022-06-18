@@ -11,13 +11,6 @@ public enum SharedInstancePrivacyMode
 
 public class VrcSharedInstance
 {
-    public LinkedAccountDetails HostUser { get; }
-    public NotificationInviteDetails WorldInstance { get; }
-    public SharedInstancePrivacyMode PrivacyMode { get; }
-    public DateTime CreationDateTime { get; }
-    public SocketRole? SocketRole { get; }
-    public IEnumerable<LinkedAccountDetails>? AllowedUsers { get; }
-
     public VrcSharedInstance(LinkedAccountDetails hostUser, NotificationInviteDetails worldInstance)
     {
         HostUser = hostUser;
@@ -26,7 +19,8 @@ public class VrcSharedInstance
         CreationDateTime = DateTime.UtcNow;
     }
 
-    public VrcSharedInstance(LinkedAccountDetails hostUser, NotificationInviteDetails worldInstance, SocketRole socketRole)
+    public VrcSharedInstance(LinkedAccountDetails hostUser, NotificationInviteDetails worldInstance,
+        SocketRole socketRole)
     {
         HostUser = hostUser;
         WorldInstance = worldInstance;
@@ -35,7 +29,8 @@ public class VrcSharedInstance
         CreationDateTime = DateTime.UtcNow;
     }
 
-    public VrcSharedInstance(LinkedAccountDetails hostUser, NotificationInviteDetails worldInstance, IEnumerable<LinkedAccountDetails> allowedUsers)
+    public VrcSharedInstance(LinkedAccountDetails hostUser, NotificationInviteDetails worldInstance,
+        IEnumerable<LinkedAccountDetails> allowedUsers)
     {
         HostUser = hostUser;
         WorldInstance = worldInstance;
@@ -43,4 +38,11 @@ public class VrcSharedInstance
         AllowedUsers = allowedUsers;
         CreationDateTime = DateTime.UtcNow;
     }
+
+    public LinkedAccountDetails HostUser { get; }
+    public NotificationInviteDetails WorldInstance { get; }
+    public SharedInstancePrivacyMode PrivacyMode { get; }
+    public DateTime CreationDateTime { get; }
+    public SocketRole? SocketRole { get; }
+    public IEnumerable<LinkedAccountDetails>? AllowedUsers { get; }
 }

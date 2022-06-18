@@ -22,15 +22,16 @@ public class LoggingService
         return Task.CompletedTask;
     }
 
-    public Task LogAsync(string message, Exception? ex = null, [CallerMemberName] string caller = "", [CallerFilePath] string file = "")
+    public Task LogAsync(string message, Exception? ex = null, [CallerMemberName] string caller = "",
+        [CallerFilePath] string file = "")
     {
         Console.ForegroundColor = ex != null ? ConsoleColor.Red : ConsoleColor.Green;
         Console.Write($"{DateTime.Now.ToLongTimeString()} [{Path.GetFileName(file)} -> {caller}] ");
         Console.ForegroundColor = ConsoleColor.White;
 
-        if ( !string.IsNullOrEmpty(message) )
+        if (!string.IsNullOrEmpty(message))
             Console.WriteLine($"{message}");
-        if ( ex != null )
+        if (ex != null)
             Console.WriteLine(ex.ToString());
 
         return Task.CompletedTask;
@@ -42,9 +43,9 @@ public class LoggingService
         Console.Write($"{DateTime.Now.ToLongTimeString()} [{log.Source}] ");
         Console.ForegroundColor = ConsoleColor.White;
 
-        if ( !string.IsNullOrEmpty(log.Message) )
+        if (!string.IsNullOrEmpty(log.Message))
             Console.WriteLine($"{log.Message}");
-        if ( log.Exception != null )
+        if (log.Exception != null)
             Console.WriteLine(log.Exception.ToString());
 
         return Task.CompletedTask;

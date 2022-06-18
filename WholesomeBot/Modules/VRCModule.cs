@@ -14,20 +14,20 @@ public class VRCModule : ModuleBase<SocketCommandContext>
     {
         var users = await VRChatApiService.SearchUsersEmbed(text);
 
-        if ( users.Count == 0 )
+        if (users.Count == 0)
         {
             _ = ReplyAsync("No Matches Found");
             return;
         }
 
-        foreach ( var embed in users )
+        foreach (var embed in users)
             _ = ReplyAsync(embed: embed);
     }
 
     [Command("friendvruser")]
     public async Task FriendVrUser([Remainder] string text)
     {
-        if ( !await VRChatApiService.SendFriendRequest(text) )
+        if (!await VRChatApiService.SendFriendRequest(text))
         {
             _ = ReplyAsync("User not found or already befriended");
             return;

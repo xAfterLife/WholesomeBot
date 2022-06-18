@@ -29,7 +29,8 @@ internal class Program
         await _logger.LogAsync("Logging into Discord");
         //Bot Login
         var client = services.GetRequiredService<DiscordSocketClient>();
-        await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("token", EnvironmentVariableTarget.User));
+        await client.LoginAsync(TokenType.Bot,
+            Environment.GetEnvironmentVariable("token", EnvironmentVariableTarget.User));
         await client.StartAsync();
 
         await _logger.LogAsync("Bot started");
@@ -39,15 +40,16 @@ internal class Program
     private static ServiceProvider ConfigureServices()
     {
         return new ServiceCollection()
-               .AddSingleton<LoggingService>()
-               .AddSingleton<UtilityService>()
-               .AddSingleton<DiscordSocketClient>()
-               .AddSingleton<CommandService>()
-               .AddSingleton<CommandHandlingService>()
-               .AddSingleton<ComponentHandlingService>()
-               .AddSingleton<VRChatApiService>()
-               .AddSingleton<VerificationService>()
-               .AddSingleton<HttpClient>()
-               .BuildServiceProvider();
+            .AddSingleton<LoggingService>()
+            .AddSingleton<UtilityService>()
+            .AddSingleton<DiscordSocketClient>()
+            .AddSingleton<CommandService>()
+            .AddSingleton<CommandHandlingService>()
+            .AddSingleton<ComponentHandlingService>()
+            .AddSingleton<VRChatApiService>()
+            .AddSingleton<VerificationService>()
+            .AddSingleton<SharedInstanceService>()
+            .AddSingleton<HttpClient>()
+            .BuildServiceProvider();
     }
 }
