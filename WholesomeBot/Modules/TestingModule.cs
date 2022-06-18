@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using WholesomeBot.Services;
 
 namespace WholesomeBot.Modules;
@@ -35,42 +36,61 @@ public class TestingModule : ModuleBase<SocketCommandContext>
     }
 
     [Command("createinstance")]
-    public async Task CreateInstance()
+    public async Task CreateInstance([Remainder] string text)
     {
-        var guid = SharedInstanceService.CreateInstance(Context.User.Id);
-        var verifiedUser = VerificationService.GetVerifiedUser(Context.User.Id);
-        if (verifiedUser != null)
+        var guid = await SharedInstanceService.CreateInstance(Context.User.Id);
+        if (guid == null)
         {
-            var user = await VRChatApiService.GetUserById(verifiedUser.VrcId);
-
-            var componentBuilder = new ComponentBuilder();
-            componentBuilder.WithButton("Invite me", (await guid).ToString());
-
-            var embedBuilder = new EmbedBuilder();
-            embedBuilder.WithColor(VRChatApiService.GetTrustColor(user));
-
-            embedBuilder.WithAuthor($"{user.DisplayName}", user.CurrentAvatarImageUrl,
-                @"https://vrchat.com/home/user/" + user.Id);
-            embedBuilder.WithDescription(string.IsNullOrEmpty(user.Bio) ? "(No Bio available)" : user.Bio);
-
-
-            embedBuilder.WithImageUrl(user.CurrentAvatarImageUrl);
-            embedBuilder.WithFooter("To find out more about a person use \'findvruser <UserID>\'");
-            embedBuilder.WithCurrentTimestamp();
-
-            await ReplyAsync(embed: embedBuilder.Build(), components: componentBuilder.Build());
+            await ReplyAsync($"{Context.User.Mention} something went wrong.. sad\n[Guid not found]");
+            return;
         }
 
-        await ReplyAsync($"{Context.User.Mention} something went wrong.. sad");
+        var instance = await SharedInstanceService.GetInstance(guid.Value);
+        if (instance == null)
+        {
+            await ReplyAsync($"{Context.User.Mention} something went wrong.. sad\n[Instance not found]");
+            return;
+        }
+
+        var verifiedUser = VerificationService.GetVerifiedUser(Context.User.Id);
+        if (verifiedUser == null)
+        {
+            await ReplyAsync($"{Context.User.Mention} something went wrong.. sad\n[verifiedUser not found]");
+            return;
+        }
+
+        var user = await VRChatApiService.GetUserById(verifiedUser.VrcId);
+
+        var componentBuilder = new ComponentBuilder();
+        componentBuilder.WithButton("Invite me", (guid).ToString());
+
+        var embedBuilder = new EmbedBuilder();
+        embedBuilder.WithColor(VRChatApiService.GetTrustColor(user));
+
+        embedBuilder.WithAuthor($"{user.DisplayName}", user.CurrentAvatarImageUrl, @"https://vrchat.com/home/user/" + user.Id);
+        embedBuilder.WithDescription(instance.WorldName);
+
+        embedBuilder.WithImageUrl(await VRChatApiService.GetWorldImageUrl(instance.WorldName));
+        embedBuilder.WithFooter("Find out more about user with \'findvruser <UserID>\'");
+
+        await ReplyAsync(embed: embedBuilder.Build(), components: componentBuilder.Build());
     }
 
     [Command("verify")]
     public async Task Verify([Remainder] string text)
     {
         var user = await VRChatApiService.GetUserByDisplayname(text);
+
         if (user == null)
+        {
+            await ReplyAsync("Can't find you");
             return;
-        VerificationService.AddVerifiedUser(user.Id, Context.User.Id);
+        }
+
+        if (VerificationService.AddVerifiedUser(user.Id, Context.User.Id))
+            await ReplyAsync("Yes yes done");
+        else
+            await ReplyAsync("Nope won't do");
     }
 
     [Command("test")]

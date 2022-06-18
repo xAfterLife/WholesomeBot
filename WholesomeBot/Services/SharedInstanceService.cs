@@ -111,7 +111,7 @@ public class SharedInstanceService
         var instance = _sharedInstances[guid];
         return instance.PrivacyMode switch
         {
-            SharedInstancePrivacyMode.Public => false,
+            SharedInstancePrivacyMode.Public => true,
             SharedInstancePrivacyMode.RoleRequired => discordUser.Roles.Contains(instance.SocketRole),
             SharedInstancePrivacyMode.Private => instance.AllowedUsers?.Contains(
                 _verificationService.GetVerifiedUser(discordUser.Id)) ?? false,
@@ -129,6 +129,36 @@ public class SharedInstanceService
         if (Guid.TryParse(id, out var guid)) return _sharedInstances.ContainsKey(guid);
         _ = _logger.LogAsync("", new Exception("Couldn't Parse Guid"));
         return false;
+    }
+
+    /// <summary>
+    ///     Checks if an Instance is still available
+    /// </summary>
+    /// <param name="guid"></param>
+    /// <returns></returns>
+    public bool InstanceActive(Guid guid)
+    {
+        return _sharedInstances.ContainsKey(guid);
+    }
+
+    /// <summary>
+    ///     returns the Instance
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public ValueTask<VrcSharedInstance?> GetInstance(string id)
+    {
+        return ValueTask.FromResult(InstanceActive(id) ? _sharedInstances[Guid.Parse(id)] : null);
+    }
+
+    /// <summary>
+    ///     returns the Instance
+    /// </summary>
+    /// <param name="guid"></param>
+    /// <returns></returns>
+    public ValueTask<VrcSharedInstance?> GetInstance(Guid guid)
+    {
+        return ValueTask.FromResult(InstanceActive(guid) ? _sharedInstances[guid] : null);
     }
 
     public async ValueTask<bool> InvitePlayer(string id, SocketGuildUser? discordUser)

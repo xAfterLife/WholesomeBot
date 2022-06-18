@@ -164,7 +164,7 @@ public class VRChatApiService
 
     public async ValueTask<LimitedUser?> GetUserByDisplayname(string displayName)
     {
-        var user = await _userApi.SearchUsersAsync(displayName, null, 1);
+        var user = await _userApi.SearchUsersAsync(displayName);
         return user.FirstOrDefault(x => x.DisplayName == displayName);
     }
 
@@ -265,9 +265,9 @@ public class VRChatApiService
     /// </summary>
     /// <param name="worldId"></param>
     /// <returns></returns>
-    public async ValueTask<string?> GetWorldImageUrl(string worldId)
+    public async ValueTask<string?> GetWorldImageUrl(string? worldName)
     {
-        var world = await _worldApi.GetWorldAsync(worldId);
+        var world = (await _worldApi.SearchWorldsAsync(search: worldName, n: 10)).FirstOrDefault(x => x.Name == worldName);
         return world?.ThumbnailImageUrl;
     }
 

@@ -45,4 +45,7 @@ public class VrcSharedInstance
     public DateTime CreationDateTime { get; }
     public SocketRole? SocketRole { get; }
     public IEnumerable<LinkedAccountDetails>? AllowedUsers { get; }
+
+    public string? WorldId => WorldInstance.worldId?[..WorldInstance.worldId.IndexOf(':')];
+    public string? WorldName => WorldInstance.worldName;
 }
