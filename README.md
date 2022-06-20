@@ -1,6 +1,10 @@
 # WholesomeBot - A VRChat DiscordBot 
 ## DiscordBot that interacts with the VRChat API to search Users- Host Instances etc.
 
+The Bots functionality is going to increase from time to time as need is seen.
+Currently working on Hosting Instances on Discord Server as public, private (with user pings) or with a required Role.
+You can search User by either DisplayName or ID and get back a well formated view of the JSON-Data
+Verification of VRChat user and linking them to a Discord Account is in the works as well.
 
 ## What is being used 
 
