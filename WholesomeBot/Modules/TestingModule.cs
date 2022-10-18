@@ -36,7 +36,7 @@ public class TestingModule : ModuleBase<SocketCommandContext>
     }
 
     [Command("createinstance")]
-    public async Task CreateInstance([Remainder] string text)
+    public async Task CreateInstance()
     {
         var guid = await SharedInstanceService.CreateInstance(Context.User.Id);
         if (guid == null)

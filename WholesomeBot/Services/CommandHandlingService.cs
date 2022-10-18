@@ -31,7 +31,7 @@ public class CommandHandlingService
     {
         // Register modules that are public and inherit ModuleBase<T>.
         foreach (var module in await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services))
-            _ = _logger.LogAsync(module.Name, caller: "Module Loaded");
+            _ = _logger.LogAsync($"{module.Name} Loaded");
     }
 
     public async Task MessageReceivedAsync(SocketMessage rawMessage)
